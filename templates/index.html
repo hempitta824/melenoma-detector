@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melanoma Detector</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #f4f6f8;
+      color: #1a1a2e;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    header p {
+      color: #5c6370;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px dashed #c5cad3;
+      border-radius: 8px;
+      background: #fafbfc;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    input[type="file"]:hover {
+      border-color: #3d6cb9;
+      background: #f0f4ff;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: #2d5aa0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover { background: #244a85; }
+
+    .preview {
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      max-height: 280px;
+      border-radius: 8px;
+      border: 1px solid #e8eaed;
+    }
+
+    .result {
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result.melanoma {
+      background: #fdecea;
+      border: 1px solid #f5c6c0;
+    }
+
+    .result.benign {
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+    }
+
+    .result-label {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .result.melanoma .result-label { color: #b71c1c; }
+    .result.benign .result-label { color: #2e7d32; }
+
+    .confidence {
+      margin-top: 0.35rem;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    .error {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #fff3e0;
+      border: 1px solid #ffcc80;
+      border-radius: 8px;
+      color: #e65100;
+      font-size: 0.9rem;
+    }
+
+    .disclaimer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Melanoma Detector</h1>
+      <p>Upload a skin lesion photo for an AI screening estimate</p>
+    </header>
+
+    <div class="card">
+      <form method="post" enctype="multipart/form-data">
+        <label for="image">Choose an image (JPG or PNG)</label>
+        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/webp" required>
+        <button type="submit">Analyze image</button>
+      </form>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      {% if image_data %}
+        <div class="preview">
+          <img src="data:image/jpeg;base64,{{ image_data }}" alt="Uploaded skin lesion">
+        </div>
+      {% endif %}
+
+      {% if result %}
+        <div class="result {{ result|lower }}">
+          <div class="result-label">{{ result }}</div>
+          <div class="confidence">Confidence: {{ confidence }}%</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <p class="disclaimer">
+      For education only — not medical advice. Always see a dermatologist for diagnosis.
+    </p>
+  </div>
+</body>
+</html>
